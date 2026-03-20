@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Практичне завдання JS</title>
+    <style>
+        /* Завдання 5 */
+        #elid {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+            position: relative;
+            left: 0;
+            transition: left 0.5s;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Завдання 3 (API)</h2>
+<input type="text" id="countyInput" placeholder="Введіть округ">
+<button id="searchBtn">Знайти код</button>
+<div id="result"></div>
+
+<hr>
+
+<h2>Завдання 4 (Форма)</h2>
+<form id="myForm">
+    <input type="text" id="first_name" placeholder="Ім'я"><br><br>
+    <input type="text" id="last_name" placeholder="Прізвище"><br><br>
+    <input type="email" id="email" placeholder="Email"><br><br>
+    <button type="submit">Відправити</button>
+</form>
+
+<hr>
+
+<h2>Завдання 5 (Анімація)</h2>
+<div id="elid"></div>
+<button id="leftBtn">Вліво</button>
+<button id="rightBtn">Вправо</button>
+
+<script>
+    // Завдання 2
+    var a = 2;
+    var x = 1 + (a *= 2);
+    console.log("x =", x); // 5
+    // Відповідь: x = 5, тому що a *= 2 дає 4, і 1 + 4 = 5
+    if ("0") {
+        console.log("Привіт"); // Відповідь: так, виконається, тому що "0" — це truthy значення
+    }
+
+    let name = "Василь";
+    let admin = name;
+    console.log("admin =", admin);
+    // Відповідь: admin = "Василь", тому що значення змінної name скопійовано в admin
+    // Завдання 3
+
+    async function fetchCounties() {
+        const response = await fetch("https://api.census.gov/data/2020/acs/acs5/profile?get=NAME&for=county:*");
+        const data = await response.json();
+
+        return data.slice(1).map(item => ({
+            name: item[0],
+            state: item[1],
+            county: item[2],
+            code: item[1] + item[2]
+        }));
+    }
+
+    function findCountyCode(counties, countyName) {
+        const found = counties.find(c => c.name === countyName);
+        return found ? found.code : "Не знайдено";
+    }
+
+    let countiesData = [];
+
+    fetchCounties().then(data => {
+        countiesData = data;
+    });
+
+    document.getElementById("searchBtn").addEventListener("click", () => {
+        const input = document.getElementById("countyInput").value;
+        const code = findCountyCode(countiesData, input);
+
+        document.getElementById("result").textContent = code;
+    });
+
+    // Завдання 4
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+        const firstName = document.getElementById("first_name").value;
+        const lastName = document.getElementById("last_name").value;
+        const email = document.getElementById("email").value;
+
+        if (!firstName || !lastName || !email) {
+            alert("Будь ласка, заповніть всі поля!");
+            event.preventDefault();
+        } else {
+            alert(`Ім'я: ${firstName}, Прізвище: ${lastName}, Email: ${email}`);
+        }
+    });
+    // Завдання 5
+    let position = 0;
+
+    document.getElementById("leftBtn").addEventListener("click", () => {
+        position -= 100;
+        document.getElementById("elid").style.left = position + "px";
+    });
+
+    document.getElementById("rightBtn").addEventListener("click", () => {
+        position += 100;
+        document.getElementById("elid").style.left = position + "px";
+    });
+
+</script>
+
+</body>
+</html>
