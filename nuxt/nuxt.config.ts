@@ -7,9 +7,9 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
-
+  ssr: false,
   routeRules: {
-    '/': { prerender: true }
+    '/': { redirect: '/products' }
   },
 
   compatibilityDate: '2025-01-15',
