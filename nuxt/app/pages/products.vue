@@ -29,9 +29,9 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $189 in savings
           </div>
-          <button class="w-full py-3 bg-gray-200 text-gray-500 font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <NuxtLink to="/checkout?plan=starter" class="block w-full py-3 bg-gray-200 text-center text-gray-500 font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
             Try It Free
-          </button>
+          </NuxtLink>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
             <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
@@ -100,9 +100,9 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $498 in savings
           </div>
-          <button class="w-full py-3 bg-orange-500 text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <NuxtLink to="/checkout?plan=team" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
             Try It Free
-          </button>
+          </NuxtLink>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
             <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
@@ -171,9 +171,9 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $1,098 in savings
           </div>
-          <button class="w-full py-3 bg-orange-500 text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <NuxtLink to="/checkout?plan=business" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
             Try It Free
-          </button>
+          </NuxtLink>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
             <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
