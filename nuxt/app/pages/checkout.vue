@@ -10,7 +10,7 @@
       </NuxtLink>
     </div>
 
-    <div v-if="pending" class="text-center py-20 text-gray-500">Завантаження даних...</div>
+    <div v-if="isLoading" class="text-center py-20 text-gray-500">Завантаження даних...</div>
 
     <section v-else-if="currentPlan" class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-[340px_1fr] gap-8 items-start">
 
@@ -78,37 +78,39 @@
               <div class="flex border border-gray-300 rounded-md overflow-hidden focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
                 <div class="flex-1 px-3 py-2 border-r border-gray-300 flex items-center gap-2">
                   <span class="text-gray-400">💳</span>
-                  <input type="text" v-model="formData.cardNumber" placeholder="Number" required class="w-full outline-none text-sm text-gray-700" />
+                  <input type="text" v-model="formData.cardNumber" placeholder="Number" required class="w-full outline-none text-sm text-black font-medium" />
                 </div>
-                <input type="text" v-model="formData.expiry" placeholder="MM / YY" required class="w-24 px-3 py-2 border-r border-gray-300 outline-none text-sm text-center text-gray-700" />
-                <input type="text" v-model="formData.cvc" placeholder="CVC" required class="w-20 px-3 py-2 outline-none text-sm text-center text-gray-700" />
+                <input type="text" v-model="formData.expiry" placeholder="MM / YY" required class="w-24 px-3 py-2 border-r border-gray-300 outline-none text-sm text-center text-black font-medium" />
+                <input type="text" v-model="formData.cvc" placeholder="CVC" required class="w-20 px-3 py-2 outline-none text-sm text-center text-black font-medium" />
               </div>
             </div>
 
             <div class="border border-gray-300 rounded-md p-4 bg-gray-50/50 space-y-4">
-              <span class="block text-xs font-semibold text-gray-500 -mb-2">Address</span>
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Billing Address</p>
+
               <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Full name</label>
-                <input type="text" v-model="formData.fullName" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                <input type="text" v-model="formData.fullName" placeholder="Enter your full name" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-black font-medium outline-none focus:border-blue-500" />
               </div>
+
               <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Address</label>
-                <input type="text" v-model="formData.address" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                <input type="text" v-model="formData.address" placeholder="Enter your address" required class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-black font-medium outline-none focus:border-blue-500" />
               </div>
             </div>
           </div>
 
           <div class="flex items-start gap-3 mb-6">
-            <input type="checkbox" v-model="formData.consent" required id="consent" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded" />
+            <input type="checkbox" v-model="formData.consent" required id="consent" class="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500" />
             <label for="consent" class="text-xs text-gray-600 leading-tight">
-              I consent to <a href="#" class="font-bold underline text-gray-700">Terms of Use</a> and understand my 3-day free trial will automatically convert to ${{ currentPlan.annualPrice.toFixed(2) }} per year starting on 04/02/2026. The yearly fee will be automatically charged each year going forward unless I cancel my account at least one (1) business day before the end of the current billing period...
+              I consent to <a href="#" class="font-bold underline text-gray-700">Terms of Use</a> and understand my 3-day free trial will automatically convert to ${{ currentPlan.annualPrice.toFixed(2) }} per year...
             </label>
           </div>
 
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="px-8 py-3 bg-gray-200 text-gray-600 font-bold text-sm rounded-md border border-transparent hover:bg-gray-300 transition-all disabled:opacity-50"
+            class="px-8 py-3 bg-orange-500 text-white font-bold text-sm rounded-md border border-transparent hover:bg-orange-600 transition-all disabled:opacity-50 disabled:bg-gray-300"
           >
             {{ isSubmitting ? 'Processing...' : 'Try It Free' }}
           </button>
@@ -124,18 +126,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
+import { useSubscriptionStore } from '~/stores/useSubscriptionStore'
 const route = useRoute()
-const planId = route.query.plan || 'starter'
-const allPlans = ref(null)
-const pending = ref(true)
+const subStore = useSubscriptionStore()
+const { currentPlan, isLoading, selectedPlanId } = storeToRefs(subStore)
+
 const formData = ref({
-  planId: planId,
   cardNumber: '',
   expiry: '',
   cvc: '',
-  fullName: 'dev4 dev4',
+  fullName: '',
   address: '',
   consent: false
 })
@@ -143,24 +146,14 @@ const formData = ref({
 const isSubmitting = ref(false)
 const successMessage = ref('')
 
-
-onMounted(async () => {
-  try {
-    const data = await $fetch('/api/plans')
-    allPlans.value = data
-  } catch (error) {
-    console.error('Помилка завантаження планів:', error)
-  } finally {
-    pending.value = false
+onMounted(() => {
+  if (route.query.plan) {
+    subStore.setPlanId(route.query.plan)
+  }
+  if (!subStore.allPlans) {
+    subStore.fetchPlans()
   }
 })
-
-
-const currentPlan = computed(() => {
-  if (!allPlans.value) return null
-  return allPlans.value[planId]
-})
-
 
 const submitOrder = async () => {
   isSubmitting.value = true
@@ -169,7 +162,10 @@ const submitOrder = async () => {
   try {
     const response = await $fetch('/api/subscription/create', {
       method: 'POST',
-      body: formData.value
+      body: {
+        planId: selectedPlanId.value,
+        ...formData.value
+      }
     })
 
     if (response.success) {

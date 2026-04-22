@@ -11,7 +11,6 @@
     </div>
 
     <section class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-
       <div class="relative bg-white rounded-xl shadow-xl w-full border border-gray-100 overflow-hidden">
         <div class="h-1.5 w-full bg-green-500"></div>
         <div class="p-8 grid gap-0">
@@ -29,15 +28,15 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $189 in savings
           </div>
-          <NuxtLink to="/checkout?plan=starter" class="block w-full py-3 bg-gray-200 text-center text-gray-500 font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <button @click="choosePlan('starter')" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-orange-600 transition-all mb-8">
             Try It Free
-          </NuxtLink>
+          </button>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
-            <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
+            <li class="grid grid-cols-[20px_1fr] gap-3 items-start text-[14px]">
               <svg class="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L14.39 8.26H22L15.81 12.74L18.19 20L12 15.52L5.81 20L8.19 12.74L2 8.26H9.61L12 1Z"/></svg>
               <div class="grid gap-1">
-                <span class="text-[14px] font-semibold text-gray-700 leading-none">Primary user only</span>
+                <span class="font-semibold text-gray-700">Primary user only</span>
                 <span class="text-[12px] text-gray-400 font-medium">(extra team members for $35/month)</span>
               </div>
             </li>
@@ -100,15 +99,15 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $498 in savings
           </div>
-          <NuxtLink to="/checkout?plan=team" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <button @click="choosePlan('team')" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-orange-600 transition-all mb-8">
             Try It Free
-          </NuxtLink>
+          </button>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
-            <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
+            <li class="grid grid-cols-[20px_1fr] gap-3 items-start text-[14px]">
               <svg class="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L14.39 8.26H22L15.81 12.74L18.19 20L12 15.52L5.81 20L8.19 12.74L2 8.26H9.61L12 1Z"/></svg>
               <div class="grid gap-1">
-                <span class="text-[14px] font-semibold text-gray-700 leading-none">Primary user + 2 free team members</span>
+                <span class="font-semibold text-gray-700">Primary user + 2 free team members</span>
                 <span class="text-[12px] text-gray-400 font-medium">(extra team members for $25/month)</span>
               </div>
             </li>
@@ -171,15 +170,15 @@
           <div class="justify-self-start bg-green-100 text-green-700 text-[12px] font-bold px-3 py-1.5 rounded-full mb-8">
             $1,098 in savings
           </div>
-          <NuxtLink to="/checkout?plan=business" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-white hover:border-gray-300 hover:text-gray-700 transition-all mb-8">
+          <button @click="choosePlan('business')" class="block w-full py-3 bg-orange-500 text-center text-white font-bold text-sm rounded-lg border-2 border-transparent hover:bg-orange-600 transition-all mb-8">
             Try It Free
-          </NuxtLink>
+          </button>
           <hr class="border-gray-50 mb-8">
           <ul class="grid gap-5">
-            <li class="grid grid-cols-[20px_1fr] gap-3 items-start">
+            <li class="grid grid-cols-[20px_1fr] gap-3 items-start text-[14px]">
               <svg class="w-5 h-5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L14.39 8.26H22L15.81 12.74L18.19 20L12 15.52L5.81 20L8.19 12.74L2 8.26H9.61L12 1Z"/></svg>
               <div class="grid gap-1">
-                <span class="text-[14px] font-semibold text-gray-700 leading-none">Primary user + 6 free team members</span>
+                <span class="font-semibold text-gray-700">Primary user + 6 free team members</span>
                 <span class="text-[12px] text-gray-400 font-medium">(extra team members for $20/month)</span>
               </div>
             </li>
@@ -224,7 +223,18 @@
           </ul>
         </div>
       </div>
-
     </section>
   </div>
 </template>
+
+<script setup>
+
+import { useSubscriptionStore } from '~/stores/useSubscriptionStore'
+
+const subStore = useSubscriptionStore()
+
+const choosePlan = (planId) => {
+  subStore.setPlanId(planId)
+  navigateTo('/checkout')
+}
+</script>
