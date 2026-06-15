@@ -1,11 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-
 export const useSubscriptionStore = defineStore('subscription', () => {
   const selectedPlanId = ref('starter')
-  const allPlans = ref(null)
+  const allPlans = ref<any>(null)
   const isLoading = ref(false)
-
   const currentPlan = computed(() => {
     if (!allPlans.value) return null
     return allPlans.value[selectedPlanId.value]
@@ -14,7 +12,6 @@ export const useSubscriptionStore = defineStore('subscription', () => {
   function setPlanId(id: string) {
     selectedPlanId.value = id
   }
-
   async function fetchPlans() {
     if (allPlans.value) return
     isLoading.value = true
@@ -25,7 +22,6 @@ export const useSubscriptionStore = defineStore('subscription', () => {
       isLoading.value = false
     }
   }
-
   return {
     selectedPlanId,
     allPlans,
